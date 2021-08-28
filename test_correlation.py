@@ -1,5 +1,6 @@
 from torch.cuda.amp import autocast
 import torch
+import numpy as np
 
 def test_correlation(model, test_generator, NUMBER_ITERATIONS):
     torch.cuda.empty_cache()

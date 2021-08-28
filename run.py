@@ -1,8 +1,13 @@
 from torch.cuda.amp import GradScaler
 from torch.cuda.amp import autocast
 import torch
+from torch.utils.tensorboard import SummaryWriter
 
-def run(model, optimizer, loss_fn, max_epochs, train_generator, test_generator, writer, RUN_TIME, WILL_CHECK_TIMINGS, USE_AUTOCAST, SAVE_FILE_AT):
+writer = SummaryWriter()
+
+torch.backends.cudnn.benchmark = True
+
+def run(model, optimizer, loss_fn, max_epochs, train_generator, test_generator, RUN_TIME, WILL_CHECK_TIMINGS, USE_AUTOCAST, SAVE_FILE_AT):
   scaler = GradScaler()
 
   torch.cuda.empty_cache()

@@ -2,7 +2,7 @@ from torch.cuda.amp import GradScaler
 from torch.cuda.amp import autocast
 import torch
 
-def run(model, optimizer, loss_fn, max_epochs, train_generator, test_generator, writer, RUN_TIME, WILL_CHECK_TIMINGS, USE_AUTOCAST):
+def run(model, optimizer, loss_fn, max_epochs, train_generator, test_generator, writer, RUN_TIME, WILL_CHECK_TIMINGS, USE_AUTOCAST, SAVE_FILE_AT):
   scaler = GradScaler()
 
   torch.cuda.empty_cache()
@@ -76,7 +76,10 @@ def run(model, optimizer, loss_fn, max_epochs, train_generator, test_generator, 
                      break
                 writer.add_scalar('Loss/train', train_loss, iteration)
                 writer.add_scalar('Loss/test', test_loss, iteration)
-                print (iteration)
+                print ("Iteration: " + str(iteration) + ", Remaining Time: " + str((RUN_TIME - timing_accumulator) / 1000) + " seconds")
+
+        if (SAVE_FILE_AT and iteration % 500 == 0):
+            torch.save(model.state_dict(), SAVE_FILE_AT)
 
         iteration += 1
         
@@ -108,4 +111,3 @@ def run(model, optimizer, loss_fn, max_epochs, train_generator, test_generator, 
     print("Remaining time: " + str((timing_accumulator - (eval_accumulator + loss_accumulator + backprop_accumulator)) / 1000))
 
   print("Number of iterations: " + str(iteration))
-
